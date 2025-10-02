@@ -1,0 +1,290 @@
+
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Planora{% endblock %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<main class="dashboard-page">
+  <!-- Shell fills available height from base.html -->
+  <div class="dashboard-shell" role="region" aria-label="Dashboard">
+    <!-- Main content + Chat sidebar -->
+    <div class="dashboard-grid">
+      <!-- Main area -->
+      <section class="main-area" aria-label="Main dashboard">
+        <!-- Welcome -->
+        <header class="welcome-block" aria-label="Welcome">
+          <h2 class="welcome-title">Welcome back, Samarpita!</h2>
+          <p class="welcome-subtitle">“Every day is a new opportunity to learn something amazing!”</p>
+        </header>
+
+        <!-- Quick alerts -->
+        <section class="quick-cards" aria-label="Quick alerts">
+          <article class="card card--lavender">
+            <h3 class="card-title">
+              <span class="card-title__icon" aria-hidden="true"></span>
+              Peak Focus Time
+            </h3>
+            <div class="card-main">2:00 PM – 4:00 PM</div>
+            <p class="card-sub">Based on your highest productivity scores.</p>
+          </article>
+
+          <article class="card card--blush">
+            <h3 class="card-title">
+              <span class="card-title__icon" aria-hidden="true"></span>
+              Priority Focus
+            </h3>
+            <div class="card-main card-main--accent">Chemistry</div>
+            <p class="card-sub">Last Studied: 18 Days Ago</p>
+          </article>
+
+          <article class="card card--mint">
+            <h3 class="card-title">
+              <span class="card-title__icon" aria-hidden="true"></span>
+              Pace Yourself
+            </h3>
+            <div class="card-main">Physics</div>
+            <p class="card-sub">18 hours logged this week (↑60%)</p>
+          </article>
+        </section>
+
+        <!-- Study tools -->
+        <section class="study-tools" aria-label="Study tools">
+          <!-- Flashcards panel -->
+          <div class="flashcard-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Flashcards</h2>
+            </div>
+
+              
+
+            <div class="doc-upload">
+  <label for="doc-upload" class="upload-label">Upload:</label>
+  <input id="doc-upload" class="upload-input" type="file" />
+  <button class="upload-btn" type="button" aria-label="Upload">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M5 20h14v-2H5v2zm7-16l-6 6h4v6h4v-6h4l-6-6z"/>
+    </svg>
+  </button>
+</div>
+
+
+              <!-- Flashcard Stage -->
+              <div class="flashcard-stage">
+                <div class="flashcard-card" id="flashcard-card">
+                  <p id="flashcard-content">Flashcard 1: Example content...</p>
+                  <!-- Invisible click zones -->
+                  <div id="flash-left" class="flash-nav flash-left" aria-label="Previous card"></div>
+                  <div id="flash-right" class="flash-nav flash-right" aria-label="Next card"></div>
+                </div>
+              </div>
+            </div>
+
+          <!-- Task plan panel -->
+          <div class="task-plan-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Today's Plan</h2>
+            </div>
+
+            <div class="task-timeline" role="list">
+              <div class="task-row" role="listitem">
+                <div class="task-dot" aria-hidden="true"></div>
+                <div class="task-meta">
+                  <strong class="task-name">Task 1: Finish Chapter 3</strong>
+                  <span class="task-deadline">Due: Oct 5, 2025</span>
+                </div>
+              </div>
+              <div class="task-row" role="listitem">
+                <div class="task-dot" aria-hidden="true"></div>
+                <div class="task-meta">
+                  <strong class="task-name">Task 2: Revise Flashcards</strong>
+                  <span class="task-deadline">Due: Oct 7, 2025</span>
+                </div>
+              </div>
+              <div class="task-row" role="listitem">
+                <div class="task-dot" aria-hidden="true"></div>
+                <div class="task-meta">
+                  <strong class="task-name">Task 3: Practice Problems</strong>
+                  <span class="task-deadline">Due: Oct 9, 2025</span>
+                </div>
+              </div>
+              <!-- More tasks… -->
+            </div>
+
+          </div>
+        </section>
+      </section>
+
+ <!-- Chatbot sidebar -->
+     <aside class="chatbot-sidebar" aria-label="Study Assistant">
+  <header class="chatbot-header">
+    <h2 class="chatbot-title">Study Assistant</h2>
+  </header>
+
+  <!-- Chat body -->
+  <div class="chatbot-body" id="chatbot-body">
+  
+
+    <!-- Messages will appear here -->
+    <div id="chat-messages"></div>
+  </div>
+
+  <!-- Input bar -->
+  <footer class="chatbot-inputbar" aria-label="Chat input">
+    <input class="chat-input" type="text" placeholder="Ask me something…" aria-label="Ask me something" />
+    <button class="chat-send" type="button">Send</button>
+  </footer>
+</aside>
+
+
+      
+    </div>
+  </div>
+</main>
+
+
+
+<script>
+  // Flashcard data with panel colors
+  const flashcards = [
+    { text: "Flashcard 1: Example content...", color: "linear-gradient(135deg, #ede9fe, #f7f6ff)" }, // lavender
+    { text: "Flashcard 2: Another content sample...", color: "linear-gradient(135deg, #fce7f3, #fff7fb)" }, // blush
+    { text: "Flashcard 3: More practice text...", color: "linear-gradient(135deg, #eaf8f0, #ffffff)" }, // mint
+    { text: "Flashcard 4: Last example card!", color: "linear-gradient(135deg, #ffe5e5, #fff0f0)" } // pinkish
+  ];
+
+  let currentIndex = 0;
+
+  const flashcardContent = document.getElementById("flashcard-content");
+  const flashcardStage = document.querySelector(".flashcard-stage");
+  const flashLeft = document.getElementById("flash-left");
+  const flashRight = document.getElementById("flash-right");
+
+  function updateFlashcard() {
+    const card = flashcards[currentIndex];
+    flashcardContent.textContent = card.text;
+    flashcardStage.style.background = card.color;  // change entire panel
+  }
+
+  flashRight.addEventListener("click", () => {
+    if (currentIndex < flashcards.length - 1) currentIndex++;
+    else currentIndex = 0;
+    updateFlashcard();
+  });
+
+  flashLeft.addEventListener("click", () => {
+    if (currentIndex > 0) currentIndex--;
+    else currentIndex = flashcards.length - 1;
+    updateFlashcard();
+  });
+
+  updateFlashcard();
+
+
+//for chatbot 
+
+
+
+
+
+
+
+
+const chatBody = document.querySelector("#chatbot-body");
+const chatInput = document.querySelector(".chat-input");
+const chatSend = document.querySelector(".chat-send");
+
+// Scroll utility
+function scrollToBottom() {
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// Create message bubble
+function createMessage(content, type = "user") {
+  const msg = document.createElement("div");
+  msg.classList.add("chat-message", type);
+
+  // Text wrapper
+  const textSpan = document.createElement("span");
+  textSpan.classList.add("chat-text");
+  textSpan.textContent = content;
+  msg.appendChild(textSpan);
+
+  // Save button (hidden by default)
+  const saveBtn = document.createElement("span");
+  saveBtn.classList.add("save-btn");
+  saveBtn.textContent = " Save";
+  saveBtn.style.display = "none";
+  msg.appendChild(saveBtn);
+
+  // Handle text selection
+  textSpan.addEventListener("mouseup", () => {
+    const selection = window.getSelection().toString().trim();
+    if (selection.length > 0) {
+      msg.classList.add("selected");
+      saveBtn.style.display = "inline-block";
+      saveBtn.dataset.selectedText = selection;
+    } else {
+      msg.classList.remove("selected");
+      saveBtn.style.display = "none";
+    }
+  });
+
+  // Save button click
+  saveBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const selectedText = saveBtn.dataset.selectedText;
+    if (selectedText && selectedText.length > 0) {
+      console.log("Saved text:", selectedText); // send to DB
+      alert("Message saved!");
+      saveBtn.style.display = "none";
+      msg.classList.remove("selected");
+      window.getSelection().removeAllRanges();
+    }
+  });
+
+  chatBody.appendChild(msg);
+  scrollToBottom();
+  return msg;
+}
+
+// Simulate bot reply
+function botReply(content) {
+  setTimeout(() => {
+    createMessage(content, "bot");
+  }, 500);
+}
+
+// Initial placeholder
+const initialPlaceholder = document.createElement("div");
+initialPlaceholder.classList.add("chat-empty");
+initialPlaceholder.textContent = "Hello, want me to help you with something?";
+initialPlaceholder.style.textAlign = "center";
+initialPlaceholder.style.marginTop = "50%";
+chatBody.appendChild(initialPlaceholder);
+
+// Send message
+function sendMessage() {
+  const text = chatInput.value.trim();
+  if (!text) return;
+
+  if (chatBody.contains(initialPlaceholder)) {
+    initialPlaceholder.remove();
+  }
+
+  createMessage(text, "user");
+  chatInput.value = "";
+
+  botReply("Bot says: " + text);
+}
+
+chatSend.addEventListener("click", sendMessage);
+chatInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendMessage();
+});
+
+</script>
+{% endblock %}

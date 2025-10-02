@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Planora{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/css/planora.css" />
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>Planora</h2>
+    </div>
+
+    <nav class="sidebar-nav" role="navigation" aria-label="Primary">
+      <ul>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/dashboard">Preferences</a></li>
+        <li><a href="/pomodoro">Pomodoro</a></li>
+        <li><a href="/sessions">Sessions</a></li>
+        <li><a href="/tasks">Tasks</a></li>
+        <li><a href="/notes">Notes</a></li>
+        <li><a href="/starred">Starred</a></li>
+        <li><a href="/challenges">Challenges</a></li>
+        <li><a href="/insights">Insights</a></li>
+        
+        
+      </ul>
+    </nav>
+
+    <div class="sidebar-bottom" role="navigation" aria-label="Secondary">
+      <a class="btn btn-ghost" href="/settings">Settings</a>
+      <a class="btn btn-accent" href="/logout">Logout</a>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    
+
+    <!-- Dynamic content -->
+    <div class="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
